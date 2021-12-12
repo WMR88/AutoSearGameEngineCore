@@ -12,4 +12,5 @@ Features List
 7. Intuitive Animation State Machine
 8. Sprite Sheet Handling System
 9. Asset import/export
-10. ect..
+10. Built in GamePad compatibilty
+11. ect..
