@@ -1,7 +1,20 @@
 # AutoSearGameEngineCore
 Auto Sear 2D Game Engine Core
 
-Features List 
+LWJGL Build Details...
+
+-Gradle
+-windows x64
+-Groovy
+-version Selector 3.23
+-JOML v1.10.2
+-Assimp
+-GLFW
+-Native File Dialog
+-OpenGl
+-stb
+
+Features List...
 
 1. Clean UI
 2. openGL Hardware rendering
