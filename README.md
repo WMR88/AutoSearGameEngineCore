@@ -18,7 +18,7 @@ Features List...
 
 1. Clean UI
 2. openGL Hardware rendering
-3. Additive Dynamic Lighting System (DLS)
+3. Additive Dynamic Lighting System (ADLS)
 4. Good Grid System (mostly for ART Placment)
 5. Sprite navigation Solution (NavMesh2D)
 6. Simple Camera
