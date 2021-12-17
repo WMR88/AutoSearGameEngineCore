@@ -29,6 +29,7 @@ public class LevelEditorScene extends Scene{
     }
 
     private void loadResources() {
+
         AssetPool.getShader("EngineAssets/Shaders/default.shader");
     }
 

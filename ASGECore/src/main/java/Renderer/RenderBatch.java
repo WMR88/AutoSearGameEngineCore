@@ -151,7 +151,7 @@ public class RenderBatch {
         if (sprite.getTexture() != null) {
             for (int i = 0; i < textures.size(); i++) {
                 if (textures.get(i) == sprite.getTexture()) {
-                    texID = 1 + 1;
+                    texID = i + 1;                                  //num changes image, vid @ 17:30
                     break;
                 }
             }

@@ -4,7 +4,7 @@ import ASGE.Component;
 import Renderer.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.w3c.dom.Text;
+
 
 public class SpriteRenderer extends Component {
 
