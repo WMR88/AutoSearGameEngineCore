@@ -1,11 +1,11 @@
 package ASGE;
 
+import ASGE.util.AssetPool;
 import Components.SpriteRenderer;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class LevelEditorScene extends Scene{
-
 
     public LevelEditorScene() {
 
@@ -13,32 +13,28 @@ public class LevelEditorScene extends Scene{
 
     @Override
     public void init() {
-        this.camera = new Camera(new Vector2f());
+        this.camera = new Camera(new Vector2f(-250, 0));
 
-        int xOffset = 10;
-        int yOffset = 10;
+        GameObject obj1 = new GameObject("object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
+        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("Assets/testImage.png")));
+        this.addGameObjectToScene(obj1);
+        System.out.println("obj1...init()");
 
-        float totalWidth = (float)(600 - xOffset * 2);
-        float totalHeight = (float)(300 - yOffset * 2);
+        GameObject obj2 = new GameObject("object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
+        obj2.addComponent(new SpriteRenderer(AssetPool.getTexture("Assets/testImage2.png")));
+        this.addGameObjectToScene(obj2);
+        System.out.println("obj2...init()");
 
-        float sizeX = totalWidth / 100.0f;
-        float sizeY = totalHeight / 100.0f;
+        loadResources();
+    }
 
-        for (int x = 0; x < 100; x++) {
-            for (int y = 0; y < 100; y++) {
-                float xPos =  xOffset + (x * sizeX);
-                float yPos =  yOffset + (y * sizeY);
-
-                GameObject go = new GameObject("obj at: " + x + y, new Transform(new Vector2f(xPos, yPos), new Vector2f(sizeX, sizeY)));
-                go.addComponent(new SpriteRenderer(new Vector4f(xPos / totalWidth, yPos / totalHeight, 1, 1)));
-                this.addGameObjectToScene(go);
-            }
-        }
+    private void loadResources() {
+        AssetPool.getShader("EngineAssets/Shaders/default.shader");
     }
 
     @Override
     public void update(float deltaTime) {
-        System.out.println("FPS: " + (1.0f / deltaTime));  ///...FPS print...
+//        System.out.println("FPS: " + (1.0f / deltaTime));  ///...FPS print...
 
         for (GameObject go : this.gameObjects) {
             go.update(deltaTime);

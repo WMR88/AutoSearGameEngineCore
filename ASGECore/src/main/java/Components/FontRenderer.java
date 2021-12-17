@@ -1,4 +1,4 @@
-package ASGE;
+package Components;
 import ASGE.Component;
 import Components.SpriteRenderer;
 
