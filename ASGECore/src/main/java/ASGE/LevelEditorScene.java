@@ -3,6 +3,7 @@ package ASGE;
 import ASGE.util.AssetPool;
 import Components.Sprite;
 import Components.SpriteRenderer;
+import Components.SpriteSheet;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -14,26 +15,30 @@ public class LevelEditorScene extends Scene{
 
     @Override
     public void init() {
+        loadResources();
+
         this.camera = new Camera(new Vector2f(-250, 0));
 
+        SpriteSheet sprites = AssetPool.getSpriteSheet("Assets/spritesheet.png");
+
         GameObject obj1 = new GameObject("object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
-        obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("Assets/testImage.png"))));
+        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
         this.addGameObjectToScene(obj1);
         System.out.println("obj1...init()");
 
         GameObject obj2 = new GameObject("object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
-        obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("Assets/testImage2.png"))));
+        obj2.addComponent(new SpriteRenderer(sprites.getSprite(10)));
         this.addGameObjectToScene(obj2);
         System.out.println("obj2...init()");
 
-        loadResources();
+
     }
 
     private void loadResources() {
 
         AssetPool.getShader("EngineAssets/Shaders/default.shader");
 
-        AssetPool.addSpriteSheet("needs a resource!!!!!!!");
+        AssetPool.addSpriteSheet("Assets/spritesheet.png", new SpriteSheet(AssetPool.getTexture("Assets/spritesheet.png"), 16, 16, 26, 0));
     }
 
     @Override
