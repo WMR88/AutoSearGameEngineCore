@@ -24,13 +24,13 @@ public class LevelEditorScene extends Scene{
 
         sprites = AssetPool.getSpriteSheet("Assets/spritesheet.png");
 
-        obj1 = new GameObject("object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
-        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj1 = new GameObject("object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 0);
+        obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("Assets/blendImage1.png"))));
         this.addGameObjectToScene(obj1);
         System.out.println("obj1...init()");
 
-        GameObject obj2 = new GameObject("object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
-        obj2.addComponent(new SpriteRenderer(sprites.getSprite(10)));
+        GameObject obj2 = new GameObject("object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 1);
+        obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("Assets/blendImage2.png"))));
         this.addGameObjectToScene(obj2);
         System.out.println("obj2...init()");
 
@@ -44,23 +44,10 @@ public class LevelEditorScene extends Scene{
         AssetPool.addSpriteSheet("Assets/spritesheet.png", new SpriteSheet(AssetPool.getTexture("Assets/spritesheet.png"), 16, 16, 26, 0));
     }
 
-    private int spriteIndex = 0;
-    private float spriteFlipTime = 0.2f;
-    private float spriteFlipTimeLeft = 0.0f;
+
     @Override
     public void update(float deltaTime) {
-        spriteFlipTimeLeft -= deltaTime;
-        if (spriteFlipTimeLeft <= 0) {
-            spriteFlipTimeLeft = spriteFlipTime;
-            spriteIndex++;
-            if (spriteIndex > 4) {
-                spriteIndex = 0;
-            }
-            obj1.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
-        }
-//        System.out.println("FPS: " + (1.0f / deltaTime));  ///...FPS print...
-        obj1.transform.position.x += 10 * deltaTime;
-
+//        System.out.println("FPS: " + (1.0f / deltaTime));                 ///...FPS print...
         for (GameObject go : this.gameObjects) {
             go.update(deltaTime);
         }
