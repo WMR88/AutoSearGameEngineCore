@@ -20,6 +20,7 @@ public class Window {
     private long glfwWindow;
     public float r, g, b, a;
     private boolean fadeToBlack = false;
+    private ImGuiLayer imguiLayer;
 
     private Window() {
         this.width = 1920;
@@ -98,7 +99,10 @@ public class Window {
 
         /// Register KeyListener w/window
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
-
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
         // make opengl context current
         glfwMakeContextCurrent(glfwWindow);
         // Enable V-Sync...
@@ -111,6 +115,8 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        this.imguiLayer = new ImGuiLayer(glfwWindow);
+        this.imguiLayer.initImGui();
 
         Window.changeScene(0); /// initial default scene.
     }
@@ -132,11 +138,28 @@ public class Window {
                 currentScene.update(deltaTime);
             }
 
+            this.imguiLayer.update(deltaTime, currentScene);
             glfwSwapBuffers(glfwWindow);
 
             endTime = (float)glfwGetTime();
             deltaTime = endTime - beginTime;
             beginTime = endTime;
         }
+    }
+
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth) {
+        get().width = newWidth;
+    }
+
+    public static void setHeight(int newHeight) {
+        get().height = newHeight;
     }
 }

@@ -4,7 +4,9 @@ import ASGE.util.AssetPool;
 import Components.Sprite;
 import Components.SpriteRenderer;
 import Components.SpriteSheet;
+import imgui.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class LevelEditorScene extends Scene{
@@ -27,23 +29,18 @@ public class LevelEditorScene extends Scene{
         obj1 = new GameObject("object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 0);
         obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("Assets/blendImage1.png"))));
         this.addGameObjectToScene(obj1);
-        System.out.println("obj1...init()");
+        this.activeGameObject = obj1;
 
         GameObject obj2 = new GameObject("object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 1);
         obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("Assets/blendImage2.png"))));
         this.addGameObjectToScene(obj2);
-        System.out.println("obj2...init()");
-
-
     }
 
     private void loadResources() {
 
         AssetPool.getShader("EngineAssets/Shaders/default.shader");
-
         AssetPool.addSpriteSheet("Assets/spritesheet.png", new SpriteSheet(AssetPool.getTexture("Assets/spritesheet.png"), 16, 16, 26, 0));
     }
-
 
     @Override
     public void update(float deltaTime) {
@@ -52,5 +49,12 @@ public class LevelEditorScene extends Scene{
             go.update(deltaTime);
         }
         this.renderer.render();
+    }
+
+    @Override                                                               // custom scene Window example.
+    public void imgui() {
+        ImGui.begin("Test Window");
+        ImGui.text("some random text");
+        ImGui.end();
     }
 }
