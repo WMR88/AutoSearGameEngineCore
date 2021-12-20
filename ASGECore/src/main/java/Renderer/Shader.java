@@ -54,9 +54,9 @@ public class Shader {
             e.printStackTrace();
             assert false : "ERROR: could not open " + filepath;
         }
-
-        System.out.println(vertexSource);
-        System.out.println(fragmentSource);
+//
+//        System.out.println(vertexSource);
+//        System.out.println(fragmentSource);
     }
 
     public void compile() {
@@ -176,6 +176,4 @@ public class Shader {
         use();
         glUniform1iv(varLocation, array);
     }
-
-
 }

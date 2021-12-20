@@ -51,7 +51,9 @@ public class Window {
     }
 
     public static Window get() {
-        if(Window.window == null) Window.window = new Window();
+        if(Window.window == null) {
+            Window.window = new Window();
+        }
         return Window.window;
     }
 
@@ -89,7 +91,7 @@ public class Window {
         /// CREATE WINDOW
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if(glfwWindow == NULL) {
-            throw new RuntimeException("failed to create new GLFW window");
+            throw new IllegalStateException("failed to create new GLFW window");
         }
 
         /// Register mouse listener w/window
@@ -127,6 +129,8 @@ public class Window {
         float endTime;
         float deltaTime = -1.0f;
 
+        currentScene.load();
+
         while(!glfwWindowShouldClose(glfwWindow)) {
             //poll events
             glfwPollEvents();
@@ -145,6 +149,8 @@ public class Window {
             deltaTime = endTime - beginTime;
             beginTime = endTime;
         }
+
+        currentScene.saveExit();
     }
 
     public static int getWidth() {
