@@ -152,7 +152,7 @@ public class ImGuiLayer {
 
         // Fonts merge example
         fontConfig.setPixelSnapH(true);
-        fontAtlas.addFontFromFileTTF("Assets/fonts/segoeui.ttf", 32, fontConfig); //// Change font and size.....
+        fontAtlas.addFontFromFileTTF("Assets/fonts/segoeui.ttf", 18, fontConfig); //// Change font and size.....
 
         fontConfig.destroy(); // After all fonts were added we don't need this config more
 
