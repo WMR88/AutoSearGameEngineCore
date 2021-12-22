@@ -1,6 +1,9 @@
-package ASGE;
+package Scenes;
 
-public class LevelScene extends Scene{
+import ASGE.Window;
+import Scenes.Scene;
+
+public class LevelScene extends Scene {
     public LevelScene() {
         System.out.println("inside level scene");
         Window.get().r = 1;

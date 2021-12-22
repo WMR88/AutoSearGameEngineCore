@@ -1,6 +1,4 @@
 package Components;
-import ASGE.Component;
-import Components.SpriteRenderer;
 
 public class FontRenderer extends Component{
 

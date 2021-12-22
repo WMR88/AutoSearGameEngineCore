@@ -1,9 +1,12 @@
 package ASGE;
+import Renderer.DebugDraw;
+import Scenes.LevelEditorScene;
+import Scenes.LevelScene;
+import Scenes.Scene;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import java.sql.SQLOutput; ///WHAT?
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -133,10 +136,13 @@ public class Window {
             //poll events
             glfwPollEvents();
 
+            DebugDraw.beginFrame();
+
             glClearColor(r, g, b, a); //RGA
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(deltaTime >= 0) {
+                DebugDraw.draw();
                 currentScene.update(deltaTime);
             }
 
