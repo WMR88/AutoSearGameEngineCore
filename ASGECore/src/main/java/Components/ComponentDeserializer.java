@@ -1,9 +1,9 @@
-package ASGE;
+package Components;
 
+import Components.Component;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
-import java.sql.SQLOutput;
 
 public class ComponentDeserializer implements JsonSerializer<Component>, JsonDeserializer<Component> {
 

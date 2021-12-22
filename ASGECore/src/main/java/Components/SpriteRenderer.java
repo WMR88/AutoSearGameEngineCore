@@ -1,6 +1,5 @@
 package Components;
 
-import ASGE.Component;
 import ASGE.Transform;
 import Renderer.Texture;
 import imgui.ImGui;

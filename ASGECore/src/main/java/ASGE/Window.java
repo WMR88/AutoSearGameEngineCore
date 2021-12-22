@@ -1,9 +1,11 @@
 package ASGE;
+import Scenes.LevelEditorScene;
+import Scenes.LevelScene;
+import Scenes.Scene;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import java.sql.SQLOutput; ///WHAT?
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

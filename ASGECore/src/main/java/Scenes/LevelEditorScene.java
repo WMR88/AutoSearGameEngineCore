@@ -1,23 +1,20 @@
-package ASGE;
+package Scenes;
 
+import ASGE.*;
 import ASGE.util.AssetPool;
-import Components.RigidBody;
-import Components.Sprite;
-import Components.SpriteRenderer;
-import Components.SpriteSheet;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import Components.*;
+import Scenes.Scene;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class LevelEditorScene extends Scene{
+public class LevelEditorScene extends Scene {
 
     private GameObject obj1;
     private SpriteSheet sprites;
     SpriteRenderer obj1Sprite;
+    MouseControls mouseControls = new MouseControls();
 
     public LevelEditorScene() {
 
@@ -30,6 +27,7 @@ public class LevelEditorScene extends Scene{
         sprites = AssetPool.getSpriteSheet("Assets/decorationsAndBlocks.png");
         if (levelLoaded) {
             this.activeGameObject = gameObjects.get(0);
+            this.activeGameObject.addComponent(new RigidBody());
             return;
         }
 
@@ -60,7 +58,8 @@ public class LevelEditorScene extends Scene{
 
     @Override
     public void update(float deltaTime) {
-        MouseListener.getOrthoX();
+
+        mouseControls.update(deltaTime);
         for (GameObject go : this.gameObjects) {
             go.update(deltaTime);
         }
@@ -89,7 +88,10 @@ public class LevelEditorScene extends Scene{
 
             ImGui.pushID(i);
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+                GameObject object = Prefabs.generatedSpriteObject(sprite, spriteWidth, spriteHeight);
                 System.out.println("button " + i + " clicked");
+                // attach to the mouse cursor
+                mouseControls.pickupObject(object);
             }
             ImGui.popID();
 
