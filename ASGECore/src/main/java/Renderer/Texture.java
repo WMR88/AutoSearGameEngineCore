@@ -9,12 +9,27 @@ import static org.lwjgl.stb.STBImage.*;
 public class Texture {
 
     private String filePath;
-    private int texID;
+    private transient int texID;
     private int width, height;
 
-//    public Texture(String filePath) {
-//
-//    }
+
+    public Texture() {
+        texID = -1;
+        width = -1;
+        height = -1;
+    }
+
+    public Texture(int width, int height) {
+        this.filePath = "Generated";
+
+        texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // deals with frame buffer when window is SCALING!!!!
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    }
 
     public void init(String filePath) {
 
@@ -75,5 +90,17 @@ public class Texture {
 
     public int getId() {
         return texID;
+    }
+
+    public String getFilepath() {
+        return this.filePath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Texture)) return false;
+        Texture oTex = (Texture) o;
+        return oTex.getWidth() == this.width && oTex.getHeight() == this.height && oTex.getId() == this.texID && oTex.getFilepath().equals(this.filePath);
     }
 }

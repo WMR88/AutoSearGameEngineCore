@@ -1,11 +1,14 @@
 package ASGE;
-import Renderer.DebugDraw;
+import ASGE.util.AssetPool;
+import Renderer.*;
 import Scenes.LevelEditorScene;
 import Scenes.LevelScene;
 import Scenes.Scene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+
+import java.sql.SQLOutput;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -24,6 +27,8 @@ public class Window {
     public float r, g, b, a;
     private boolean fadeToBlack = false;
     private ImGuiLayer imguiLayer;
+    private FrameBuffer framebuffer;
+    private PickingTexture pickingTexture;
 
     private Window() {
         this.width = 1920;
@@ -119,7 +124,12 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        this.imguiLayer = new ImGuiLayer(glfwWindow);
+
+        this.framebuffer = new FrameBuffer(1920, 1080);
+        this.pickingTexture = new PickingTexture(1920, 1080);
+        glViewport(0, 0, 1920, 1080);
+
+        this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
         this.imguiLayer.initImGui();
 
         Window.changeScene(0); /// initial default scene.
@@ -131,20 +141,41 @@ public class Window {
         float endTime;
         float deltaTime = -1.0f;
 
+        Shader defaultShader = AssetPool.getShader("EngineAssets/Shaders/default.shader");
+        Shader pickingShader = AssetPool.getShader("EngineAssets/Shaders/pickingShader.shader");
 
         while(!glfwWindowShouldClose(glfwWindow)) {
             //poll events
             glfwPollEvents();
 
+            //Render pass 1. render to pixel picking texture, discard pixels with alpha < 0.5.
+            glDisable(GL_BLEND);
+            pickingTexture.enableWriting();
+
+            glViewport(0, 0, 1920, 1080);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Renderer.bindShader(pickingShader);
+            currentScene.render();
+
+            pickingTexture.disableWriting();
+            glEnable(GL_BLEND);
+
+            // render pass 2, render game.
+
             DebugDraw.beginFrame();
 
+            this.framebuffer.bind();
             glClearColor(r, g, b, a); //RGA
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(deltaTime >= 0) {
                 DebugDraw.draw();
+                Renderer.bindShader(defaultShader);
                 currentScene.update(deltaTime);
             }
+            this.framebuffer.unbind();
 
             this.imguiLayer.update(deltaTime, currentScene);
             glfwSwapBuffers(glfwWindow);
@@ -153,7 +184,6 @@ public class Window {
             deltaTime = endTime - beginTime;
             beginTime = endTime;
         }
-
         currentScene.saveExit();
     }
 
@@ -171,5 +201,13 @@ public class Window {
 
     public static void setHeight(int newHeight) {
         get().height = newHeight;
+    }
+
+    public static FrameBuffer getFramebuffer() {
+        return get().framebuffer;
+    }
+
+    public static float getTargetAspectRatio() {
+        return 16.0f / 9.0f;
     }
 }
