@@ -40,7 +40,6 @@ public class SpriteSheet {
                 currentY -= spriteHeight + spacing;
             }
         }
-
     }
 
     public Sprite getSprite(int index) {
