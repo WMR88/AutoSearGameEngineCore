@@ -33,11 +33,11 @@ public class MouseListener {
         return MouseListener.instance;
     }
 
-    public static void mousePosCallback(long window, double xPos, double yPos) {
+    public static void mousePosCallback(long window, double xpos, double ypos) {
         get().lastX = get().xPos;
         get().lastY = get().yPos;
-        get().xPos = xPos;
-        get().yPos = yPos;
+        get().xPos = xpos;
+        get().yPos = ypos;
         get().isDragging = get().mouseButtonPressed[0] || get().mouseButtonPressed[1] || get().mouseButtonPressed[2];
     }
 
@@ -104,7 +104,7 @@ public class MouseListener {
 
     public static  float getScreenX() {
         float currentX = getX() - get().gameViewportPos.x;
-        currentX = currentX / get().gameViewportSize.x * 1920.0f;
+        currentX = (currentX / get().gameViewportSize.x) * 1920.0f;
         return currentX;
     }
 
@@ -116,7 +116,7 @@ public class MouseListener {
 
     public static float getOrthoX() {
         float currentX = getX() - get().gameViewportPos.x;
-        currentX = currentX / get().gameViewportSize.x * 2.0f - 1.0f;
+        currentX = (currentX / get().gameViewportSize.x) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
 
         Camera camera = Window.getScene().camera();
