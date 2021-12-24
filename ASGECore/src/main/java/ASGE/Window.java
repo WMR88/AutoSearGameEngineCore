@@ -181,6 +181,7 @@ public class Window {
 
             this.imguiLayer.update(deltaTime, currentScene);
             glfwSwapBuffers(glfwWindow);
+            MouseListener.endFrame();
 
             endTime = (float)glfwGetTime();
             deltaTime = endTime - beginTime;
@@ -211,5 +212,9 @@ public class Window {
 
     public static float getTargetAspectRatio() {
         return 16.0f / 9.0f;
+    }
+
+    public static ImGuiLayer getImguiLayer() {
+        return get().imguiLayer;
     }
 }

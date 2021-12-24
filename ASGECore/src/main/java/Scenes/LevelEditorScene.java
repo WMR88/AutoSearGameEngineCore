@@ -25,12 +25,19 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
+        loadResources();
+        sprites = AssetPool.getSpriteSheet("Assets/decorationsAndBlocks.png");
+        SpriteSheet gizmos = AssetPool.getSpriteSheet("Assets/gizmos.png");
+
+        this.camera = new Camera(new Vector2f(-250, 0));
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
+        levelEditorStuff.addComponent(new EditorCamera(this.camera));
+        levelEditorStuff.addComponent(new GizmoSystem(gizmos));
 
-        loadResources();
-        this.camera = new Camera(new Vector2f(-250, 0));
-        sprites = AssetPool.getSpriteSheet("Assets/decorationsAndBlocks.png");
+        levelEditorStuff.start();
+
+
 
 
 
@@ -57,6 +64,7 @@ public class LevelEditorScene extends Scene {
         AssetPool.getShader("EngineAssets/Shaders/default.shader");
         AssetPool.getTexture("Assets/blendImage2.png");  /// f'ed up texture.
         AssetPool.addSpriteSheet("Assets/decorationsAndBlocks.png", new SpriteSheet(AssetPool.getTexture("Assets/decorationsAndBlocks.png"), 16, 16, 81, 0));
+        AssetPool.addSpriteSheet("Assets/gizmos.png", new SpriteSheet(AssetPool.getTexture("Assets/gizmos.png"), 24, 48, 3, 0));
 
         for (GameObject g : gameObjects) {
             if (g.getComponent(SpriteRenderer.class) != null) {
@@ -72,6 +80,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float deltaTime) {
         levelEditorStuff.update(deltaTime);
+        this.camera.adjustProjection();
 
         for (GameObject go : this.gameObjects) {
             go.update(deltaTime);
@@ -85,6 +94,10 @@ public class LevelEditorScene extends Scene {
     }
 
     public void imgui() {
+        ImGui.begin("Level Editor Stuff");
+        levelEditorStuff.imgui();
+        ImGui.end();
+
         ImGui.begin("Test Window");
 
         ImVec2 windowPos = new ImVec2();
