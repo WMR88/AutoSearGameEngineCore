@@ -125,6 +125,7 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+
         this.framebuffer = new FrameBuffer(1920, 1080);
         this.pickingTexture = new PickingTexture(1920, 1080);
         glViewport(0, 0, 1920, 1080);
@@ -174,6 +175,7 @@ public class Window {
                 DebugDraw.draw();
                 Renderer.bindShader(defaultShader);
                 currentScene.update(deltaTime);
+                currentScene.render();
             }
             this.framebuffer.unbind();
 
