@@ -2,6 +2,7 @@ package Scenes;
 import ASGE.Camera;
 import ASGE.GameObject;
 import ASGE.GameObjectDeserializer;
+import ASGE.Transform;
 import Components.Component;
 import Components.ComponentDeserializer;
 import Renderer.Renderer;
@@ -67,6 +68,13 @@ public abstract class Scene {
 
     public void imgui() {
 
+    }
+
+    public GameObject createGameObject(String name) {
+        GameObject go = new GameObject(name);
+        go.addComponent(new Transform());
+        go.transform = go.getComponent(Transform.class);
+        return go;
     }
 
     public void saveExit() {
