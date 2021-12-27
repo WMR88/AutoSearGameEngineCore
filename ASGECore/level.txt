@@ -119,6 +119,22 @@
           },
           "uid": 40
         }
+      },
+      {
+        "type": "Physics2D.PhysicsComponents.RigidBody2D",
+        "properties": {
+          "velocity": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "angularDamping": 0.8,
+          "linearDamping": 0.9,
+          "mass": 0.0,
+          "bodyType": "Dynamic",
+          "fixedRotaion": false,
+          "continuousCollision": true,
+          "uid": 59
+        }
       }
     ],
     "doSerialization": true
