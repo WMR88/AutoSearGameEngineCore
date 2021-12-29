@@ -1,5 +1,10 @@
 package ASGE;
+import ASGE.util.AssetPool;
 import Components.Component;
+import Components.ComponentDeserializer;
+import Components.SpriteRenderer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import imgui.ImGui;
 
 import java.util.ArrayList;
@@ -9,10 +14,11 @@ public class GameObject {
     private static int ID_COUNTER = 0;
     private int uid = -1;
 
-    private String name;
+    public String name;
     private List<Component> components;
     public transient Transform transform;
     private boolean doSerialization = true;
+    private boolean isDead = false;
 
     public GameObject(String name) {
         this.name = name;
@@ -56,6 +62,12 @@ public class GameObject {
         }
     }
 
+    public void editorUpdate(float deltaTime) {
+        for (int i = 0; i < components.size(); i++) {
+            components.get(i).editorUpdate(deltaTime);
+        }
+    }
+
     public void start() {
         for (int i = 0; i < components.size(); i++) {
             components.get(i).start();
@@ -65,8 +77,39 @@ public class GameObject {
     public void imgui() {
         for (Component c : components) {
             if (ImGui.collapsingHeader(c.getClass().getSimpleName()))
-            c.imgui();
+                c.imgui();
         }
+    }
+
+    public void destroy() {
+        this.isDead = true;
+        for (int i = 0; i < components.size(); i++) {
+            components.get(i).destroy();
+        }
+    }
+
+    public GameObject copy() {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .create();
+        String objAsJson = gson.toJson(this);
+        GameObject obj = gson.fromJson(objAsJson, GameObject.class);
+
+        obj.generateUid();
+        for (Component c : obj.getAllComponents()) {
+            c.generateId();
+        }
+
+        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
+        if (sprite != null && sprite.getTexture() != null) {
+            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().getFilepath()));
+        }
+        return obj;
+    }
+
+    public boolean isDead() {
+        return this.isDead;
     }
 
     public static void init(int maxId) {
@@ -83,6 +126,10 @@ public class GameObject {
 
     public void setNoSerialize() {
         this.doSerialization = false;
+    }
+
+    public void generateUid() {
+        this.uid = ID_COUNTER++;
     }
 
     public boolean doSerialization() {

@@ -36,8 +36,8 @@ public class Transform extends Component{
     public void imgui() {
         ASGEImGui.drawVec2Control("Position", this.position);
         ASGEImGui.drawVec2Control("Scale", this.scale, 32.0f); /// for 32X32 sprites.
-        ASGEImGui.dragFloat("Rotation", this.rotation);
-        ASGEImGui.dragInt("Z-Index", this.zIndex);
+        this.rotation = ASGEImGui.dragFloat("Rotation", this.rotation);
+        this.zIndex = ASGEImGui.dragInt("Z-Index", this.zIndex);
     }
 
     public void copy(Transform to) {
