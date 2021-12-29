@@ -5,10 +5,12 @@ import ASGE.GameObjectDeserializer;
 import ASGE.Transform;
 import Components.Component;
 import Components.ComponentDeserializer;
+import Physics2D.Physics2D;
 import Renderer.Renderer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import imgui.ImGui;
+import org.joml.Vector2f;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,26 +20,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Scene {
+public class Scene {
 
-    protected Renderer renderer = new Renderer();
-    protected Camera camera;
-    private boolean isRunning = false;
-    protected List<GameObject> gameObjects = new ArrayList<>();
-    protected boolean levelLoaded = false;
+    private Renderer renderer;
+    private Camera camera;
+    private boolean isRunning;
+    private List<GameObject> gameObjects;
+    private Physics2D physics2D;
 
-    public Scene() {
+    private SceneInitializer sceneInitializer;
 
+    public Scene(SceneInitializer sceneInitializer) {
+        this.sceneInitializer = sceneInitializer;
+        this.physics2D = new Physics2D();
+        this.renderer = new Renderer();
+        this.gameObjects = new ArrayList<>();
+        this.isRunning = false;
     }
 
     public void init() {
-
+        this.camera = new Camera(new Vector2f(-250, 0));
+        this.sceneInitializer.loadResources(this);
+        this.sceneInitializer.init(this);
     }
 
     public void start() {
-        for (GameObject go : gameObjects) {
-        go.start();
-        this.renderer.add(go);
+        for (int i = 0; i < gameObjects.size(); i++) {
+            GameObject go = gameObjects.get(i);
+            go.start();
+            this.renderer.add(go);
+            this.physics2D.add(go);
         }
         isRunning = true;
     }
@@ -49,7 +61,18 @@ public abstract class Scene {
             gameObjects.add(go);
             go.start();
             this.renderer.add(go);
+            this.physics2D.add(go);
         }
+    }
+
+    public void destroy() {
+        for (GameObject go : gameObjects) {
+            go.destroy();
+        }
+    }
+
+    public List<GameObject> getGameObjects() {
+        return this.gameObjects;
     }
 
     public GameObject getGameObject(int gameObjectId) {
@@ -59,15 +82,49 @@ public abstract class Scene {
         return result.orElse(null);
     }
 
-    public abstract void update(float deltaTime);
-    public abstract void render();
+    public void editorUpdate(float deltaTime) {
+        this.camera.adjustProjection();
+
+        for (int i = 0; i < gameObjects.size(); i++) {
+            GameObject go = gameObjects.get(i);
+            go.editorUpdate(deltaTime);
+
+            if (go.isDead()) {
+                gameObjects.remove(i);
+                this.renderer.destroyGameObject(go);
+                this.physics2D.destroyGameObject(go);
+                i--;
+            }
+        }
+    }
+
+    public void update(float deltaTime) {
+        this.camera.adjustProjection();
+        this.physics2D.update(deltaTime);
+
+        for (int i = 0; i < gameObjects.size(); i++) {
+            GameObject go = gameObjects.get(i);
+            go.update(deltaTime);
+
+            if (go.isDead()) {
+                gameObjects.remove(i);
+                this.renderer.destroyGameObject(go);
+                this.physics2D.destroyGameObject(go);
+                i--;
+            }
+        }
+    }
+
+    public void render() {
+        this.renderer.render();
+    }
 
     public Camera camera() {
         return this.camera;
     }
 
     public void imgui() {
-
+        this.sceneInitializer.imgui();
     }
 
     public GameObject createGameObject(String name) {
@@ -77,7 +134,7 @@ public abstract class Scene {
         return go;
     }
 
-    public void saveExit() {
+    public void save() {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
@@ -134,7 +191,6 @@ public abstract class Scene {
             System.out.println(maxCompId);
             GameObject.init(maxGoId);
             Component.init(maxCompId);
-            this.levelLoaded = true;
         }
     }
 }

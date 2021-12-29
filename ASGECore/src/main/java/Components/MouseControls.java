@@ -20,10 +20,10 @@ public class MouseControls extends Component{
     }
 
     @Override
-    public void update(float deltaTime)  {
+    public void editorUpdate(float deltaTime)  {
         if (holdingObject != null) {
-            holdingObject.transform.position.x = MouseListener.getOrthoX() -16;
-            holdingObject.transform.position.y = MouseListener.getOrthoY() -16;
+            holdingObject.transform.position.x = MouseListener.getOrthoX(); // did say ...X() -16;
+            holdingObject.transform.position.y = MouseListener.getOrthoY(); // did say ...Y() -16;
             holdingObject.transform.position.x =  (int)(holdingObject.transform.position.x / Settings.GRID_WIDTH) * Settings.GRID_WIDTH;  /// grid snapping X.
             holdingObject.transform.position.y =  (int)(holdingObject.transform.position.y / Settings.GRID_HEIGHT) * Settings.GRID_HEIGHT;  /// grid snapping Y.
 

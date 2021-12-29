@@ -11,62 +11,40 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class LevelEditorScene extends Scene {
+public class LevelEditorSceneInitializer extends SceneInitializer {
 
-    private GameObject obj1;
+//    private GameObject obj1;
     private SpriteSheet sprites;
-    SpriteRenderer obj1Sprite;
+//    SpriteRenderer obj1Sprite;
+    private GameObject levelEditorStuff;
 
-    GameObject levelEditorStuff = this.createGameObject("levelEditor");
-
-    public LevelEditorScene() {
+    public LevelEditorSceneInitializer() {
 
     }
 
     @Override
-    public void init() {
-        loadResources();
+    public void init(Scene scene) {
         sprites = AssetPool.getSpriteSheet("Assets/decorationsAndBlocks.png");
         SpriteSheet gizmos = AssetPool.getSpriteSheet("Assets/gizmos.png");
 
-        this.camera = new Camera(new Vector2f(-250, 0));
+        levelEditorStuff = scene.createGameObject("LevelEditor");
+        levelEditorStuff.setNoSerialize();
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
-        levelEditorStuff.addComponent(new EditorCamera(this.camera));
+        levelEditorStuff.addComponent(new EditorCamera(scene.camera()));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
-
-        levelEditorStuff.start();
-
-
-
-
-
-//        obj1 = new GameObject("object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 2);
-//        obj1Sprite = new SpriteRenderer();
-//        obj1Sprite.setColor(new Vector4f(1, 0, 0, 1));
-//        obj1.addComponent(obj1Sprite);
-//        obj1.addComponent(new RigidBody());
-//        this.addGameObjectToScene(obj1);
-//        this.activeGameObject = obj1;
-//
-//        GameObject obj2 = new GameObject("object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 3);
-//        SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-//        Sprite obj2Sprite = new Sprite();
-//        obj2Sprite.setTexture(AssetPool.getTexture("Assets/blendImage2.png"));
-//        obj2SpriteRenderer.setSprite(obj2Sprite);
-//        obj2.addComponent(obj2SpriteRenderer);
-//        this.addGameObjectToScene(obj2);
-
+        scene.addGameObjectToScene(levelEditorStuff);
     }
 
-    private void loadResources() {
+    @Override
+    public void loadResources(Scene scene) {
 
         AssetPool.getShader("EngineAssets/Shaders/default.shader");
         AssetPool.getTexture("Assets/blendImage2.png");  /// f'ed up texture.
         AssetPool.addSpriteSheet("Assets/decorationsAndBlocks.png", new SpriteSheet(AssetPool.getTexture("Assets/decorationsAndBlocks.png"), 16, 16, 81, 0));
         AssetPool.addSpriteSheet("Assets/gizmos.png", new SpriteSheet(AssetPool.getTexture("Assets/gizmos.png"), 24, 48, 3, 0));
 
-        for (GameObject g : gameObjects) {
+        for (GameObject g : scene.getGameObjects()) {
             if (g.getComponent(SpriteRenderer.class) != null) {
                 SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
                 if (spr.getTexture() != null) {
@@ -76,23 +54,7 @@ public class LevelEditorScene extends Scene {
         }
     }
 
-
     @Override
-    public void update(float deltaTime) {
-        levelEditorStuff.update(deltaTime);
-        this.camera.adjustProjection();
-
-        for (GameObject go : this.gameObjects) {
-            go.update(deltaTime);
-        }
-
-    }
-
-    @Override
-    public void render() {
-        this.renderer.render();
-    }
-
     public void imgui() {
         ImGui.begin("Level Editor Stuff");
         levelEditorStuff.imgui();
@@ -119,7 +81,7 @@ public class LevelEditorScene extends Scene {
 
             ImGui.pushID(i);
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                GameObject object = Prefabs.generatedSpriteObject(sprite, 32, 32);
+                GameObject object = Prefabs.generatedSpriteObject(sprite, 0.25f, 0.25f);
                 System.out.println("button " + i + " clicked");
                 // attach to the mouse cursor
                 levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);

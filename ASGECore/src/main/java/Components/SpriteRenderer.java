@@ -41,6 +41,14 @@ public class SpriteRenderer extends Component {
         }
     }
 
+    @Override
+    public void editorUpdate(float deltaTime) {
+        if (!this.lastTransform.equals(this.gameObject.transform)) {
+            this.gameObject.transform.copy(this.lastTransform);
+            isDirty = true;
+        }
+    }
+
     public Vector4f getColor() {
         return this.color;
     }
@@ -78,6 +86,10 @@ public class SpriteRenderer extends Component {
         if (ASGEImGui.colorPicker4("Color Picker", this.color)) {
             this.isDirty = true;
         }
+    }
+
+    public void setDirty() {
+        this.isDirty = true;
     }
 
     public void setTexture(Texture texture) {
